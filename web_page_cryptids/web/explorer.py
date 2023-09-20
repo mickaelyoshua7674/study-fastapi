@@ -1,10 +1,11 @@
 from fastapi import APIRouter
 from model.explorer import Explorer
-import fake.explorer as service
+import data.explorer as service
 
 router = APIRouter(prefix="/explorer")
 
-@router.get("/")
+@router.get("") # add this so can return using '/explorer'
+@router.get("/") # this return using '/explorer/'
 def get_all() -> list[Explorer]:
     return service.get_all()
 

@@ -1,4 +1,4 @@
-from init import curs
+from .init import curs
 from model.explorer import Explorer
 
 curs.execute("""CREATE TABLE IF NOT EXISTS explorer(
@@ -15,13 +15,11 @@ def model_to_dict(explorer: Explorer) -> dict:
 def get_one(name: str) -> Explorer:
     qry = "SELECT * FROM explorer WHERE name=:name;"
     params = {"name": name}
-    curs.execute(qry, params)
-    return row_to_model(curs.fetchone())
+    return row_to_model(curs.execute(qry, params).fetchone())
 
 def get_all() -> list[Explorer]:
     qry = "SELECT * FROM explorer;"
-    curs.execute(qry)
-    return [row_to_model(row) for row in curs.fetchall()]
+    return [row_to_model(row) for row in curs.execute(qry).fetchall()]
 
 def create(explorer: Explorer) -> Explorer:
     qry = "INSERT INTO explorer VALUES (:name,:nationality);"

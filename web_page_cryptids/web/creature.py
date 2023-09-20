@@ -1,10 +1,11 @@
 from fastapi import APIRouter
 from model.creature import Creature
-import fake.creature as service
+import data.creature as service
 
 router = APIRouter(prefix="/creature")
 
-@router.get("/")
+@router.get("") # add this so can return using '/creature'
+@router.get("/") # this return using '/creature/'
 def get_all() -> list[Creature]:
     return service.get_all()
 

@@ -1,4 +1,4 @@
-from init import curs
+from .init import curs
 from model.creature import Creature
 
 curs.execute("""CREATE TABLE IF NOT EXISTS creature(
@@ -16,13 +16,11 @@ def model_to_dict(creature: Creature) -> dict:
 def get_one(name: str) -> Creature:
     qry = "SELECT * FROM creature WHERE name=:name;"
     params = {"name": name}
-    curs.execute(qry, params)
-    return row_to_model(curs.fetchone())
+    return row_to_model(curs.execute(qry, params).fetchone())
 
 def get_all() -> list[Creature]:
     qry = "SELECT * FROM creature;"
-    curs.execute(qry)
-    return [row_to_model(row) for row in curs.fetchall()]
+    return [row_to_model(row) for row in curs.execute(qry).fetchall()]
 
 def create(creature: Creature) -> Creature:
     qry = "INSERT INTO creature VALUES (:name,:description,:location);"
