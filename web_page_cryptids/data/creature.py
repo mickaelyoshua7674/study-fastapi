@@ -8,7 +8,7 @@ curs.execute("""CREATE TABLE IF NOT EXISTS creature(
 );""")
 
 def row_to_model(row: tuple) -> Creature:
-    return Creature(*row)
+    return Creature(name=row[0], description=row[1], location=row[2])
 
 def model_to_dict(creature: Creature) -> dict:
     return creature.model_dump()

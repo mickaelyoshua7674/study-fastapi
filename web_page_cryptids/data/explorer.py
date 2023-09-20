@@ -7,7 +7,7 @@ curs.execute("""CREATE TABLE IF NOT EXISTS explorer(
 );""")
 
 def row_to_model(row: tuple) -> Explorer:
-    return Explorer(*row)
+    return Explorer(name=row[0], nationality=row[1])
 
 def model_to_dict(explorer: Explorer) -> dict:
     return explorer.model_dump()

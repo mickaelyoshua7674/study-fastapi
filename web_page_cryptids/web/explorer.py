@@ -13,7 +13,7 @@ def get_all() -> list[Explorer]:
 def get_one(name) -> Explorer | None:
     return service.get_one(name)
 
-# all the ramaining endpoints do nothong yet
+@router.post("")
 @router.post("/")
 def create(explorer: Explorer) -> Explorer:
     return service.create(explorer)

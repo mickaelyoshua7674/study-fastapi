@@ -13,7 +13,7 @@ def get_all() -> list[Creature]:
 def get_one(name) -> Creature | None:
     return service.get_one(name)
 
-# all the ramaining endpoints do nothong yet
+@router.post("")
 @router.post("/")
 def create(creature: Creature) -> Creature:
     return service.create(creature)
