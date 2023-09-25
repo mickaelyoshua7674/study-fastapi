@@ -1,6 +1,6 @@
 from .init import curs, IntegrityError
 from model.creature import Creature
-from ..errors import Missing, Duplicate
+from errors.errors import Missing, Duplicate
 
 curs.execute("""CREATE TABLE IF NOT EXISTS creature(
     name TEXT PRIMARY KEY,

@@ -1,6 +1,6 @@
 from .init import curs, IntegrityError
 from model.explorer import Explorer
-from ..errors import Missing, Duplicate
+from errors.errors import Missing, Duplicate
 
 curs.execute("""CREATE TABLE IF NOT EXISTS explorer(
     name TEXT PRIMARY KEY,
