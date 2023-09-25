@@ -1,5 +1,6 @@
-from .init import curs
+from .init import curs, IntegrityError
 from model.creature import Creature
+from ..errors import Missing, Duplicate
 
 curs.execute("""CREATE TABLE IF NOT EXISTS creature(
     name TEXT PRIMARY KEY,
@@ -16,7 +17,11 @@ def model_to_dict(creature: Creature) -> dict:
 def get_one(name: str) -> Creature:
     qry = "SELECT * FROM creature WHERE name=:name;"
     params = {"name": name}
-    return row_to_model(curs.execute(qry, params).fetchone())
+    res = curs.execute(qry, params).fetchone()
+    if res:
+        return row_to_model(res)
+    else:
+        raise Missing(f"Creature {name} not found")
 
 def get_all() -> list[Creature]:
     qry = "SELECT * FROM creature;"
@@ -25,10 +30,13 @@ def get_all() -> list[Creature]:
 def create(creature: Creature) -> Creature:
     qry = "INSERT INTO creature VALUES (:name,:description,:location);"
     params = model_to_dict(creature)
-    curs.execute(qry, params)
+    try:
+        curs.execute(qry, params)
+    except IntegrityError:
+        raise Duplicate(f"Creature {creature.name} already exists")
     return get_one(creature.name)
 
-def modify(creature: Creature) -> Creature:
+def modify(name: str, creature: Creature) -> Creature:
     qry = """UPDATE creature
     SET name=:name,
     description=:description,
@@ -36,10 +44,16 @@ def modify(creature: Creature) -> Creature:
     WHERE name=:name0;"""
     params = model_to_dict(creature)
     params["name0"] = creature.name
-    curs.execute(qry, params)
-    return get_one(creature.name)
+    res = curs.execute(qry, params)
+    if res.rowcount == 1:
+        return get_one(creature.name)
+    else:
+        raise Missing(f"Creature {name} not found")
 
-def delete(creature: Creature) -> bool:
+def delete(name: str) -> bool:
+    if not name: return False
     qry = "DELETE FROM creature WHERE name=:name;"
-    params = {"name": creature.name}
-    return bool(curs.execute(qry, params))
+    params = {"name": name}
+    res = curs.execute(qry, params)
+    if res.rowcount != 1:
+        raise Missing(f"Crteature {name} not found")
